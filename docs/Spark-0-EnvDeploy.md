@@ -183,7 +183,7 @@ export PATH=$PATH:/usr/local/hadoop/bin:/usr/local/spark/bin
 export LD_LIBRARY_PATH=/usr/local/hadoop/lib/native:$LD_LIBRARY_PATH  
 ```
 
-### 2. 启动yarn+spark
+### 2. 启动yarn
 ```
 cd /usr/local/hadoop  
 ./sbin/start-dfs.sh  
@@ -201,7 +201,7 @@ jps查看进程，应该有以下几个(ignore pid)
 16228 DataNode  
 ```
 
-### 3. 停止yarn+spark
+### 3. 停止yarn
 ```
 cd /usr/local/hadoop  
 ./sbin/stop-dfs.sh  
