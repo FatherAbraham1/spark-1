@@ -5,11 +5,9 @@ Apache Spark是一个快速且通用的集群计算系统，它提供了Java, Sc
 2. python spark实战
 
 ## 2. 目录介绍
-### 1. env_deploy
-1. Spark-env-deploy
+### 1. docs
+1. Spark-0-EnvDeploy
+2. Spark-1-QuickStart
 
-### 2. docs
-1. Spark-1-QuickStart
-
-### 3. code
+### 2. code
 1. quick_start
