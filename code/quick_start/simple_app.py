@@ -10,5 +10,7 @@ sc = SparkContext("local", "SimpleApp")
 data_rdd = sc.textFile('/user/hadoop/test_data/README.md').cache()
 num_a = data_rdd.filter(lambda line: 'a' in line).count()
 num_b = data_rdd.filter(lambda line: 'b' in line).count()
+print "============================"
 print num_a
 print num_b
+print "============================"

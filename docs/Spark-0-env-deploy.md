@@ -184,6 +184,8 @@ http://master:8080
 
 ## 三. tools
 ### 1. 机器配置
+有2种方式运行Spark，一种是使用Yarn另外一种就是Spark的本地模式。为了方面，以后我们都采用Yarn来运行Spark任务，不会再单独启动Spark
+
 ```
 sudo chown hadoop:root -R /usr/local/hadoop  
 sudo chown hadoop:root -R /usr/local/spark  
@@ -206,16 +208,12 @@ cd /usr/local/hadoop
 ./sbin/start-dfs.sh  
 ./sbin/start-yarn.sh  
 ./sbin/mr-jobhistory-daemon.sh start historyserver  
-cd /usr/local/spark  
-./sbin/start-all.sh  
 ```
 jps查看进程，应该有以下几个(ignore pid)
 ```
 16891 NodeManager  
-14814 Worker  
 16951 JobHistoryServer  
 16502 SecondaryNameNode  
-14629 Master  
 16028 NameNode  
 17729 Jps  
 16683 ResourceManager  
@@ -228,13 +226,12 @@ cd /usr/local/hadoop
 ./sbin/stop-dfs.sh  
 ./sbin/stop-yarn.sh  
 ./sbin/mr-jobhistory-daemon.sh stop historyserver  
-cd /usr/local/spark  
-./sbin/stop-all.sh  
 ```
 
 ### 4. web界面查看
 ```
 查看nameNode和dataNode: http://localhost:50070/  
 查看yarn集群: http://localhost:8088/cluster  
-查看spark任务: http://localhost:8080
+
+注意: 利用client模型提交的Spark任务是无法在yarn集群查看到的，这个跟driver在本地有关系，后续会有专门的文章研究spark和yarn的关系  
 ```
