@@ -183,6 +183,7 @@ http://master:8080
 ```
 
 ## 三. tools
+### 1. 机器配置
 ```
 sudo chown hadoop:root -R /usr/local/hadoop  
 sudo chown hadoop:root -R /usr/local/spark  
@@ -190,15 +191,50 @@ sudo chmod 775 -R /usr/local/hadoop
 sudo chmod 775 -R /usr/local/spark  
 ```
 ```
-1. start YARN  
+//bashrc配置  
+export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-i386  
+export HADOOP_HOME=/usr/local/hadoop     
+export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native  
+export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop  
+export PATH=$PATH:/usr/local/hadoop/bin:/usr/local/spark/bin  
+export LD_LIBRARY_PATH=/usr/local/hadoop/lib/native:$LD_LIBRARY_PATH  
+```
+
+### 2. 启动yarn+spark
+```
 cd /usr/local/hadoop  
 ./sbin/start-dfs.sh  
 ./sbin/start-yarn.sh  
 ./sbin/mr-jobhistory-daemon.sh start historyserver  
+cd /usr/local/spark  
+./sbin/start-all.sh  
+```
+jps查看进程，应该有以下几个(ignore pid)
+```
+16891 NodeManager  
+14814 Worker  
+16951 JobHistoryServer  
+16502 SecondaryNameNode  
+14629 Master  
+16028 NameNode  
+17729 Jps  
+16683 ResourceManager  
+16228 DataNode  
+```
 
-2. stop YARN  
+### 3. 停止yarn+spark
+```
 cd /usr/local/hadoop  
 ./sbin/stop-dfs.sh  
 ./sbin/stop-yarn.sh  
-./sbin/mr-jobhistory-daemon.sh stop historyserver 
+./sbin/mr-jobhistory-daemon.sh stop historyserver  
+cd /usr/local/spark  
+./sbin/stop-all.sh  
+```
+
+### 4. web界面查看
+```
+查看nameNode和dataNode: http://localhost:50070/  
+查看yarn集群: http://localhost:8088/cluster  
+查看spark任务: http://localhost:8080
 ```
