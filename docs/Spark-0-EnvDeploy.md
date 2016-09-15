@@ -11,7 +11,12 @@
 ```
 (1) sudo apt-get update  
 (2) 安装vim: sudo apt-get install vim  
-(3) 安装ssh: sudo apt-get install openssh-server  
+(3) 安装ssh: sudo apt-get install openssh-server
+(4) 设置ssh免登录  
+cd ~/.ssh  
+rm ./id_rsa*  
+ssh-keygen -t rsa  (一路回车即可)  
+cat ./id_rsa.pub >> ./authorized_keys 
 ```
 
 ### 3. 安装java环境
@@ -87,31 +92,7 @@ cd ~/workspace/hadoop-2.6.0/etc/hadoop进入hadoop配置目录，如果没有had
     <property>  
         <name>yarn.nodemanager.aux-services</name>  
         <value>mapreduce_shuffle</value>  
-    </property>  
-    <property>  
-        <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>  
-        <value>org.apache.hadoop.mapred.ShuffleHandler</value>  
-    </property>  
-    <property>  
-        <name>yarn.resourcemanager.address</name>  
-        <value>master:8032</value>  
-    </property>  
-    <property>  
-        <name>yarn.resourcemanager.scheduler.address</name>  
-        <value>master:8030</value>  
-    </property>  
-    <property>  
-        <name>yarn.resourcemanager.resource-tracker.address</name>  
-        <value>master:8035</value>  
-    </property>  
-    <property>  
-        <name>yarn.resourcemanager.admin.address</name>  
-        <value>master:8033</value>  
-    </property>  
-    <property>  
-        <name>yarn.resourcemanager.webapp.address</name>  
-        <value>master:8088</value>  
-    </property>  
+    </property>
 </configuration>  
 ```
 
