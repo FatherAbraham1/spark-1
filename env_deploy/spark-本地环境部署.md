@@ -32,8 +32,17 @@
       sudo tar -zxf hadoop-2.7.3.tar.gz -C /usr/local  
       cd /usr/local  
       sudo mv hadoop-2.7.3 hadoop  
-      sudo chown -R hadoop hadoop  
-(3) 修改./etc/hadoop/core-site.xml文件，如下  
+      sudo chown -R hadoop hadoop
+```
+
+### 5. 配置hadoop
+```
+cd ~/workspace/hadoop-2.6.0/etc/hadoop进入hadoop配置目录，如果没有hadoop-env.sh或yarn-env.sh需要从后缀名为hadoop-env.sh.template复制一份  
+1). 在hadoop-env.sh中配置JAVA_HOME  
+2).在yarn-env.sh中配置JAVA_HOME  
+```
+```
+3). 修改core-site.xml  
 <configuration>  
         <property>  
              <name>hadoop.tmp.dir</name>  
@@ -45,7 +54,9 @@
              <value>hdfs://localhost:9000</value>  
         </property>  
 </configuration>  
-(4) 修改./etc/hadoop/hdfs-site.xml文件，如下  
+```
+```
+4). hdfs-site.xml  
 <configuration>  
         <property>  
              <name>dfs.replication</name>  
@@ -59,51 +70,81 @@
              <name>dfs.datanode.data.dir</name>  
              <value>file:/usr/local/hadoop/tmp/dfs/data</value>  
         </property>  
-</configuration>
-(4) namenode格式化  
-    ./bin/hdfs namenode -format  
-(5) 修改~/.bashrc添加以下两行，并执行source ~/.bashrc  
-    export HADOOP_HOME=/usr/local/hadoop   
-    export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native  
-(6) ./libexec/hadoop-config.sh 找到JAVA_HOME，在前面添加  
-    export JAVA_HOME=...  
-(7) 开启 NameNode 和 DataNode 守护进程  
-    ./sbin/start-dfs.sh  
-(8) jps命令查看是否成功启动  
-    若成功启动则会列出如下进程: “NameNode”、”DataNode” 和 “SecondaryNameNode”（如果 SecondaryNameNode 没有启动，请运行 sbin/stop-dfs.sh 关闭进程，然后再次尝试启动尝试）。如果没有 NameNode 或 DataNode ，那就是配置不成功，请仔细检查之前步骤，或通过查看启动日志排查原因。  
-(9) 启动成功后可以通过 http://localhost:50070/查看nameNode和dataNode相关信息  
-(10) 关闭hadoop  
-      ./sbin/stop-dfs.sh  
-      第二次之后启动 hadoop，无需进行 NameNode 的初始化，只需要运行 ./sbin/start-dfs.sh 即可  
+</configuration>  
+```
+```
+5). mapred-site.xml  
+<configuration>  
+    <property>  
+        <name>mapreduce.framework.name</name>  
+        <value>yarn</value>  
+    </property>  
+</configuration>  
+```
+```
+6). yarn-site.xml  
+<configuration>  
+    <property>  
+        <name>yarn.nodemanager.aux-services</name>  
+        <value>mapreduce_shuffle</value>  
+    </property>  
+    <property>  
+        <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>  
+        <value>org.apache.hadoop.mapred.ShuffleHandler</value>  
+    </property>  
+    <property>  
+        <name>yarn.resourcemanager.address</name>  
+        <value>master:8032</value>  
+    </property>  
+    <property>  
+        <name>yarn.resourcemanager.scheduler.address</name>  
+        <value>master:8030</value>  
+    </property>  
+    <property>  
+        <name>yarn.resourcemanager.resource-tracker.address</name>  
+        <value>master:8035</value>  
+    </property>  
+    <property>  
+        <name>yarn.resourcemanager.admin.address</name>  
+        <value>master:8033</value>  
+    </property>  
+    <property>  
+        <name>yarn.resourcemanager.webapp.address</name>  
+        <value>master:8088</value>  
+    </property>  
+</configuration>  
 ```
 
-### 5. 启动YARN
+### 6. 启动hadoop
 ```
-(1) 重命名./etc/hadoop/mapred-site.xml文件  
-      mv ./etc/hadoop/mapred-site.xml.template ./etc/hadoop/mapred-site.xml  
-(2) 编辑./etc/hadoop/mapred-site.xml文件  
-<configuration>  
-        <property>  
-             <name>mapreduce.framework.name</name>  
-             <value>yarn</value>  
-        </property>  
-</configuration>  
-(3) ./etc/hadoop/yarn-site.xml文件  
-<configuration>  
-        <property>  
-             <name>yarn.nodemanager.aux-services</name>  
-             <value>mapreduce_shuffle</value>  
-            </property>  
-</configuration>  
-(4) 启动yarn  
-      ./sbin/start-yarn.sh   
-      ./sbin/mr-jobhistory-daemon.sh start historyserver  #开启历史服务器，才能在Web中查看任务运行情况  
-(5) jps查看  
-      开启后通过 jps 查看，可以看到多了 NodeManager 和 ResourceManager 两个后台进程  
- (6) 启动成功后可以通过页面http://localhost:8088/cluster查看集群任务的运行情况  
- (7) 关闭yarn  
-       ./sbin/stop-yarn.sh   
-       ./sbin/mr-jobhistory-daemon.sh stop historyserver  
+(1) namenode格式化  
+    ./bin/hdfs namenode -format  
+(2) 修改~/.bashrc添加以下两行，并执行source ~/.bashrc  
+    export HADOOP_HOME=/usr/local/hadoop   
+    export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native  
+(3) ./libexec/hadoop-config.sh 找到JAVA_HOME，在前面添加  
+    export JAVA_HOME=...  
+(4) 开启 NameNode 和 DataNode 守护进程  
+    ./sbin/start-dfs.sh  
+(5) jps命令查看是否成功启动  
+    若成功启动则会列出如下进程: “NameNode”、”DataNode” 和 “SecondaryNameNode”（如果 SecondaryNameNode 没有启动，请运行 sbin/stop-dfs.sh 关闭进程，然后再次尝试启动尝试）。如果没有 NameNode 或 DataNode ，那就是配置不成功，请仔细检查之前步骤，或通过查看启动日志排查原因。  
+(6) 启动成功后可以通过 http://localhost:50070/查看nameNode和dataNode相关信息  
+(7) 关闭hadoop  
+    ./sbin/stop-dfs.sh  
+    第二次之后启动 hadoop，无需进行 NameNode 的初始化，只需要运行 ./sbin/start-dfs.sh 即可  
+```
+
+### 7. 启动YARN
+```
+(1) 启动yarn  
+     ./sbin/start-yarn.sh   
+     ./sbin/mr-jobhistory-daemon.sh start historyserver  #开启历史服务器，才能在Web中查看任务运行情况  
+(2) jps查看  
+     开启后通过 jps 查看，可以看到多了 NodeManager 和 ResourceManager 两个后台进程  
+(3) 启动成功后可以通过页面http://localhost:8088/cluster查看集群任务的运行情况  
+(4) 关闭yarn  
+      ./sbin/stop-yarn.sh   
+      ./sbin/mr-jobhistory-daemon.sh stop historyserver  
 ```
 
 ## 二. 安装Spark
@@ -118,11 +159,36 @@
     vim ~/.bashrc  
     export PATH=$PATH:/usr/local/hadoop/bin:/usr/local/spark/bin  
     source ~/.bashrc  
-4. 开始使用Spark  
-    pyspark 或 spark-submit  
+```
+```
+4). 配置Spark   
+cd /usr/local/spark/conf   
+cp spark-env.sh.template spark-env.sh   
+vim spark-env.sh  
+配置内容如下  
+export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-i386  
+export HADOOP_HOME=/usr/local/hadoop     
+export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop  
+SPARK_MASTER_IP=master  
+SPARK_LOCAL_DIRS=/usr/local/spark  
+SPARK_DRIVER_MEMORY=1G  
+```
+```
+5). 启动spark  
+sh /usr/local/sbin/start-all.sh  
+启动成功后可以使用  
+pyspark或spark-submit  
+同时也可以访问以下链接查看spark任务  
+http://master:8080
 ```
 
 ## 三. tools
+```
+sudo chown hadoop:root -R /usr/local/hadoop  
+sudo chown hadoop:root -R /usr/local/spark  
+sudo chmod 775 -R /usr/local/hadoop  
+sudo chmod 775 -R /usr/local/spark  
+```
 ```
 1. start YARN  
 cd /usr/local/hadoop  
