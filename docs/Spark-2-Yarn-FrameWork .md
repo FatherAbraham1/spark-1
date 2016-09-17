@@ -12,10 +12,11 @@ ResourceManager和每个worker结点我们称为NodeManager (NM)组成数据处�
 ## 2. 架构
 ![](https://hadoop.apache.org/docs/r2.4.1/hadoop-yarn/hadoop-yarn-site/yarn_architecture.gif)
 
-1. ResourceManager 有2个主要的组件，调度器（Scheduler）和应用管理（ApplicationsManager）
+![](http://www.ibm.com/developerworks/cn/data/library/bd-yarn-intro/Figure3Architecture-of-YARN.png)
 
-    1). 调度器（Scheduler）负责分配资源给运行的应用，常见的比如容量，队列等。调度器只是单纯的进行任务的调度和资源分配，并不会监控或跟踪应用的状态。同时，它也不能重启因应用失败或者硬件错误而运行失败的任务。调度器满足应用程序基本的资源需求，包括`内存`, `cpu`, `磁盘`, `网络`等等
+1. 在 YARN 架构中，一个全局 ResourceManager 以主要后台进程的形式运行，它通常在专用机器上运行，在各种竞争的应用程序之间仲裁可用的集群资源。ResourceManager 会追踪集群中有多少可用的活动节点和资源，协调用户提交的哪些应用程序应该在何时获取这些资源。ResourceManager 是惟一拥有此信息的进程，所以它可通过某种共享的、安全的、多租户的方式制定分配（或者调度）决策（例如，依据应用程序优先级、队列容量、ACLs、数据位置等）。
+2. 在用户提交一个应用程序时，一个称为 ApplicationMaster 的轻量型进程实例会启动来协调应用程序内的所有任务的执行。这包括监视任务，重新启动失败的任务，推测性地运行缓慢的任务，以及计算应用程序计数器值的总和。这些职责以前分配给所有作业的单个 JobTracker。ApplicationMaster 和属于它的应用程序的任务，在受 NodeManager 控制的资源容器中运行。
+3. NodeManager 是 TaskTracker 的一种更加普通和高效的版本。没有固定数量的 map 和 reduce slots，NodeManager 拥有许多动态创建的资源容器。容器的大小取决于它所包含的资源量，比如内存、CPU、磁盘和网络 IO。目前，仅支持内存和 CPU (YARN-3)。未来可使用 cgroups 来控制磁盘和网络IO。一个节点上的容器数量，由配置参数与专用于从属后台进程和操作系统的资源以外的节点资源总量（比如总 CPU 数和总内存）共同决定。
+4. ApplicationMaster 可在容器内运行任何类型的任务。例如，MapReduce ApplicationMaster 请求一个容器来启动 map 或 reduce 任务，而 Giraph ApplicationMaster 请求一个容器来运行 Giraph 任务。您还可以实现一个自定义的 ApplicationMaster 来运行特定的任务，进而发明出一种全新的分布式应用程序框架，改变大数据世界的格局。
 
-    2). 应用管理（ApplicationsManager） 负责支持job的提交，同时启动应用的ApplicationMaster，并且支持重启ApplicationMaster
-2. NodeManager是每台worker机器上的一个进程，负责监控worker机器的资源使用（CPU，内存，磁盘，网络），同时把资源使用情况同步给ResourceManager 
-3. 每个应用都有一个ApplicationMaster，负责和调度器进行通信申请资源，同时监控和追踪应用的状态和进度
+在 YARN 中，MapReduce 降级为一个分布式应用程序的一个角色（但仍是一个非常流行且有用的角色），现在称为 MRv2。MRv2 是经典 MapReduce 引擎（现在称为 MRv1）的重现，运行在 YARN 之上。
