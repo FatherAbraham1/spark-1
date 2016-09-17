@@ -14,7 +14,7 @@ ResourceManager和每个worker结点我们称为NodeManager (NM)组成数据处�
 
 1. ResourceManager 有2个主要的组件，调度器（Scheduler）和应用管理（ApplicationsManager）
 
-    1). 调度器（Scheduler）负责分配资源给运行的应用，常见的比如容量，队列等。调度器只是单纯的进行任务的调度和资源分配，并不会监控或跟踪应用的状态。同时，支持重启失败任务，由于应用失败或者硬件设备问题导致。调度器满足应用程序基本的资源需求，包括`内存`, `cpu`, `磁盘`, `网络`等等
+    1). 调度器（Scheduler）负责分配资源给运行的应用，常见的比如容量，队列等。调度器只是单纯的进行任务的调度和资源分配，并不会监控或跟踪应用的状态。同时，它也不能重启因应用失败或者硬件错误而运行失败的任务。调度器满足应用程序基本的资源需求，包括`内存`, `cpu`, `磁盘`, `网络`等等
 
     2). 应用管理（ApplicationsManager） 负责支持job的提交，同时启动应用的ApplicationMaster，并且支持重启ApplicationMaster
 2. NodeManager是每台worker机器上的一个进程，负责监控worker机器的资源使用（CPU，内存，磁盘，网络），同时把资源使用情况同步给ResourceManager 
