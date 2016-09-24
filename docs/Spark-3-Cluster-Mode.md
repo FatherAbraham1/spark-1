@@ -31,9 +31,11 @@ Spark应用在集群上是独立运行的进程, 通过主程序(main program)�
 ## 3.Clsuter manager
 目前有三种类型的Cluster manager支持Spark
 
-[standalone]: http://spark.apache.org/docs/latest/spark-standalone.html
-[Apache Mesos]: http://spark.apache.org/docs/latest/running-on-mesos.html
-[Hadoop YARN]: http://spark.apache.org/docs/latest/running-on-yarn.html
+[standalone](http://spark.apache.org/docs/latest/spark-standalone.html)
+
+[Apache Mesos](http://spark.apache.org/docs/latest/running-on-mesos.html)
+
+[Hadoop YARN](http://spark.apache.org/docs/latest/running-on-yarn.html)
 
 ## 4.名词解释
 Spark应用程序可以通过 spark-submit进行提交
