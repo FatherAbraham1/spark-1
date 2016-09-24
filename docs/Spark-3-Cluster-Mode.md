@@ -40,6 +40,7 @@ Spark应用程序可以通过 spark-submit进行提交
 
 每个driver程序都有一个web UI, 端口4040. 前端可以展示tasks, executors和存储使用情况.
 
+```
 Term              Meaning
 ----------------------------------------------------------------------------------
 Application       用户开发的Spark应用程序, 包括driver程序和集群的executors进程
@@ -65,6 +66,4 @@ Job               多个并行计算task组成一个Job
 ----------------------------------------------------------------------------------
 Stage             每个job被分割成多个不同task集合, 每个task集合称为stage
                   例如map和reduce是Mapeduce的一个stage
-
-
-
+```
