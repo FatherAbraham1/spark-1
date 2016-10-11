@@ -42,7 +42,7 @@ cat ./id_rsa.pub >> ./authorized_keys
 
 ### 5. 配置hadoop
 ```
-cd /usr/local/etc/hadoop进入hadoop配置目录，如果没有hadoop-env.sh或yarn-env.sh需要从后缀名为hadoop-env.sh.template复制一份 
+cd /usr/local/hadoop/etc/hadoop进入hadoop配置目录，如果没有hadoop-env.sh或yarn-env.sh需要从后缀名为hadoop-env.sh.template复制一份 
 1). 在hadoop-env.sh中配置JAVA_HOME  
 2).在yarn-env.sh中配置JAVA_HOME  
 ```
