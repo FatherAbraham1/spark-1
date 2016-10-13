@@ -15,7 +15,7 @@ c. saveAsTextFile把RDD持久化存储到hdfs文件
 ```
 
 ### 2. Pi Estimation
-Spark还可以执行计算密集型任务, 采取"掷非镖"的方式画出单位圆, 随机选取点(x,y)观测有多少点落于圆内, 落于圆内的概率为 pi/4, 通过这个来预测pi值
+Spark还可以执行计算密集型任务, 采取"掷非镖"的方式画出单位圆, 随机选取点(x,y)观测有多少点落于圆内, 落于圆内的概率为 pi/4, 因此可以通过这个来预测pi值
 ```
 def sample(p):
     x, y = random(), random()
@@ -28,3 +28,4 @@ a. parallelize用于把python的collection序列化为Spark的RDD, map根据随�
 ```
 
 ## 三. DataFrame API Example
+
