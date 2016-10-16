@@ -14,24 +14,16 @@ setup_status = setup(
     package_data = {
         '': ['*.py']
     },
+    data_files = [
+    ],
     install_requires = [
-        'hdfs3 >= 0.1'
+        'snakebite >= 0.1'
     ],
     author = "chenguolin",
     author_email = "cgl1079743846@gmail.com",
     description = "This is an about Spark Python util package"
 )
 
-def install_hdfs3_so():
-    try:
-        import hdfs3
-    except Exception,e:
-        print "[WARN] hdfs3 not install"
-        os.popen('ssh -T git@github.com')
-        #os.system('git clone git@github.com:dask/hdfs3 hdfs3')
-        #os.system('cd hdfs3 && sudo python setup.py install')
-
-install_hdfs3_so()
 ##############################################################################################################
 try:
     os.system('rm -rf dist')
