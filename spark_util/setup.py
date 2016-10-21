@@ -17,7 +17,6 @@ setup_status = setup(
     data_files = [
     ],
     install_requires = [
-        'snakebite >= 0.1'
     ],
     author = "chenguolin",
     author_email = "cgl1079743846@gmail.com",
