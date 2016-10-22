@@ -1,6 +1,5 @@
 ## 1. 说明
-Python Spark util api
-1. Python Api operator HDFS
+Python Spark util api. Contain Python HDFS api
 
 ## 2. 使用方法
 1. 修改conf目录下namenode.conf配置
@@ -17,3 +16,12 @@ Python Spark util api
 
 ## 4. 基础库
 1. hdfs_util: hdfs文件操作相关api
+   1. cat 
+   2. copy_to_local //拷贝hdfs文件或目录到本地文件系统
+   3. count
+   4. rm //rm hdfs file
+   5. ls
+   6. mkdir
+   7. mv
+   8. rmdir
+   9. exists // check hdfs file or directory is exists
