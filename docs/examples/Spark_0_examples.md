@@ -1,8 +1,6 @@
 ## 一. Spark Example
 这篇文章会快速的介绍Spark的API, Spark是基于分布式的数据集, 可以包含任意的Java或Python项目. 用户可以从外部的数据生成数据集, 同时可以进行并行的操作.Spark内建的API就是RDD API. RDD API有2种操作: transformations 定义一个新的RDD基于前面的RDD; actions 在集群上开行执行job. Spark RDD提供了高级的API, DataFrame API 和 Machine Learning API. 这些API提供简单的方式进行数据操作, 在这篇文章中我们会使用这些高级的API进行演示.
 
-代码: https://github.com/chenguolin/spark/blob/master/code/examples/Spark_0_code.py
-
 ## 二. RDD API Example
 ### 1. Word Count
 这个例子中, 使用transformations去操作string pair计算word counts并存储到文件
@@ -15,6 +13,11 @@ a. sc.textFile用来读取hdfs文件返回RDD
 b. flatMap把一个RDD数据映射为多个, map把一个单词映射为(word,1) pair, reduceByKey把相同的key进行累加
 c. saveAsTextFile把RDD持久化存储到hdfs文件
 
+代码: https://github.com/chenguolin/spark/blob/master/code/examples/Spark_0_code.py
+提交: spark-submit  --master yarn --num-executors 1 --executor-cores 2 --executor-memory 500M Spark_0_code.py
+      默认用client方式执行这样才能在当前机器看到print信息
+      spark-submit  --master yarn --deploy-mode cluster --num-executors 1 --executor-cores 2 --executor-memory 500M Spark_0_code.py
+      这种方式执行的话driver print的信息不会打在当前机器的console
 ```
 
 ### 2. Pi Estimation
