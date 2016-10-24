@@ -214,8 +214,6 @@ cd /usr/local/hadoop
 ```
 查看nameNode和dataNode: http://localhost:50070/  
 查看yarn集群: http://localhost:8088/cluster  
-
-注意: 利用client模型提交的Spark任务是无法在yarn集群查看到的，这个跟driver在本地有关系，后续会有专门的文章研究spark和yarn的关系  
 ```
 
 ### 5. 问题汇总
