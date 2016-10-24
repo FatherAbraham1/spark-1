@@ -4,6 +4,7 @@
 import os
 import sys
 from pyspark import SparkContext
+from spark_util import hdfs_util
 sc = SparkContext(appName="Spark_0_code")
 
 def example_one():
@@ -15,6 +16,9 @@ def example_one():
     print text_file.collect()
     new_text_file = text_file.flatMap(lambda line: line.split(" ")).map(lambda word: (word, 1)).reduceByKey(lambda a, b: a + b)
     result_data_path = '/user/hadoop/examples/data_0_res'
+    if hdfs_util.exists(result_data_path) and hdfs_util.rmdir(result_data_path) is False:
+        print "[ERROR] remove hdfs dir:[%s] error" % result_data_path
+        sys.exit(2)
     new_text_file.saveAsTextFile(result_data_path)
 
 def main():
