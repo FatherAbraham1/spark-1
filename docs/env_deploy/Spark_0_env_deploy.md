@@ -178,6 +178,7 @@ sudo chmod 775 -R /usr/local/spark
 export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-i386  
 export HADOOP_HOME=/usr/local/hadoop     
 export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native  
+export HADOOP_OPTS=-Djava.library.path=$HADOOP_HOME/lib  
 export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop  
 export PATH=$PATH:/usr/local/hadoop/bin:/usr/local/spark/bin  
 export LD_LIBRARY_PATH=/usr/local/hadoop/lib/native:$LD_LIBRARY_PATH  
@@ -215,4 +216,15 @@ cd /usr/local/hadoop
 查看yarn集群: http://localhost:8088/cluster  
 
 注意: 利用client模型提交的Spark任务是无法在yarn集群查看到的，这个跟driver在本地有关系，后续会有专门的文章研究spark和yarn的关系  
+```
+
+### 5. 问题汇总
+#### 1
+Hadoop 2.x.x - warning: You have loaded library /home/hadoop/2.2.0/lib/native/libhadoop.so.1.0.0 which might have disabled stack guard.  
+```
+解决方案  
+1. vi ~/.bashrc  
+2. 添加以下2行  
+   export HADOOP_COMMON_LIB_NATIVE_DIR=${HADOOP_HOME}/lib/native  
+   export HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/lib  
 ```
