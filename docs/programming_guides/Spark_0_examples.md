@@ -31,7 +31,44 @@ count = sc.parallelize(xrange(0, NUM_SAMPLES)).map(sample).reduce(lambda a, b: a
 print "Pi is roughly %f" % (4.0 * count / NUM_SAMPLES)
 
 a. parallelize用于把python的collection序列化为Spark的RDD, map根据随机点的位置返回1或0, reduce把所有的值相加
+
+代码: https://github.com/chenguolin/spark/blob/master/code/examples/Spark_1_code.py
+提交: spark-submit  --master yarn --num-executors 1 --executor-cores 1 --executor-memory 500M Spark_1_code.py
+      默认用client方式执行这样才能在当前机器看到print信息
 ```
 
 ## 三. DataFrame API Example
+Spark的DataFrame对象是一个以列组织的分布式数据对象, 用户可以使用DataFrame API在外部数据源和Spark内置的分布式数据集上执行各种关系型操作. 同时程序基于Spark的DataFrame API将会由Spark内置的优化器进行优化
+
+### 1. Text Search
+这个例子我们在log文件里面搜索错误信息
+```
+textFile = sc.textFile("hdfs://...")
+
+# Creates a DataFrame having a single column named "line"
+df = textFile.map(lambda r: Row(r)).toDF(["line"])
+errors = df.filter(col("line").like("%ERROR%"))
+
+# Counts all the errors
+errors.count()
+
+# Counts errors mentioning MySQL
+errors.filter(col("line").like("%MySQL%")).count()
+
+# Fetches the MySQL errors as an array of strings
+errors.filter(col("line").like("%MySQL%")).collect()
+
+a. textFile从hdfs读取log文件
+b. map把每一行映射为Row对象, 同时利用toDF函数转化成DataFrame对象
+c. 通过col("line")找到line这一列再调用like函数找到error信息
+d. count函数计算rdd对象record个数
+
+代码: https://github.com/chenguolin/spark/blob/master/code/examples/Spark_2_code.py
+      例子和Spark_2_code有差异 Spark2.0之后rdd没有toDF函数
+提交: spark-submit  --master yarn --num-executors 1 --executor-cores 1 --executor-memory 500M Spark_2_code.py
+      默认用client方式执行这样才能在当前机器看到print信息
+```
+
+### 2. Simple Data Operations
+
 
