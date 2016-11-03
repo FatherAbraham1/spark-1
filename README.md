@@ -6,34 +6,34 @@ Apache Spark是一个快速且通用的集群计算系统，它提供了Java, Sc
 3. python spark_util基础库
 
 ## 2. 目录介绍
-### 1. doc_translate
+### 2.1 doc_translate
 Spark官方文档翻译
-##### 1. overview
+##### 2.1.1 overview
 1. yarn_frameword.md
 
-##### 2. programming_guides 
+##### 2.1.2 programming_guides 
 1. examples
 2. quick_start
 
-##### 3. Api_docs 
+##### 2.1.3 Api_docs 
 
-##### 4. deploy
+##### 2.1.4 deploy
 1. env_deploy.md
 2. overview.md
 3. submitting_applications.md
 
-##### 5. more
+##### 2.1.5 more
 
-### 2. spark_util
+### 2.2 spark_util
 Spark Python基础库
-##### 1. conf
+##### 2.2.1 conf
 1. namenode.conf
 
-##### 2. snakebite
+##### 2.2.2 snakebite
 python connection with yarn cluster namenode and datanode
 
-##### 3. spark_util
+##### 2.2.3 spark_util
 1. hdfs_util
 
-##### 4. test
+##### 2.2.4 test
 unit test
