@@ -13,7 +13,7 @@ a. sc.textFile用来读取hdfs文件返回RDD
 b. flatMap把一个RDD数据映射为多个, map把一个单词映射为(word,1) pair, reduceByKey把相同的key进行累加
 c. saveAsTextFile把RDD持久化存储到hdfs文件
 
-代码: https://github.com/chenguolin/spark/blob/master/code/examples/Spark_0_code.py
+代码: ./code/Spark_0_code.py
 提交: spark-submit  --master yarn --num-executors 1 --executor-cores 2 --executor-memory 500M Spark_0_code.py
       默认用client方式执行这样才能在当前机器看到print信息
       spark-submit  --master yarn --deploy-mode cluster --num-executors 1 --executor-cores 2 --executor-memory 500M Spark_0_code.py
@@ -32,7 +32,7 @@ print "Pi is roughly %f" % (4.0 * count / NUM_SAMPLES)
 
 a. parallelize用于把python的collection序列化为Spark的RDD, map根据随机点的位置返回1或0, reduce把所有的值相加
 
-代码: https://github.com/chenguolin/spark/blob/master/code/examples/Spark_1_code.py
+代码: ./code/Spark_1_code.py
 提交: spark-submit  --master yarn --num-executors 1 --executor-cores 1 --executor-memory 500M Spark_1_code.py
       默认用client方式执行这样才能在当前机器看到print信息
 ```
@@ -63,12 +63,48 @@ b. map把每一行映射为Row对象, 同时利用toDF函数转化成DataFrame�
 c. 通过col("line")找到line这一列再调用like函数找到error信息
 d. count函数计算rdd对象record个数
 
-代码: https://github.com/chenguolin/spark/blob/master/code/examples/Spark_2_code.py
+代码: ./code/Spark_2_code.py
       例子和Spark_2_code有差异 Spark2.0之后rdd没有toDF函数
 提交: spark-submit  --master yarn --num-executors 1 --executor-cores 1 --executor-memory 500M Spark_2_code.py
       默认用client方式执行这样才能在当前机器看到print信息
 ```
 
 ### 2. Simple Data Operations
+在这个例子中, 从数据库的表中读取数据并计算每个人的平均年龄. 最后把数据按照json格式存储在S3. 一个简单的Mysql表"people"有2列"name"和"age"
+```
+# Creates a DataFrame based on a table named "people"
+# stored in a MySQL database.
+url = "jdbc:mysql://yourIP:yourPort/test?user=yourUsername;password=yourPassword"
+df = sqlContext.read.format("jdbc").option("url", url).option("dbtable", "people").load()
 
+# Looks the schema of this DataFrame.
+df.printSchema()
 
+# Counts people by age
+countsByAge = df.groupBy("age").count()
+countsByAge.show()
+
+# Saves countsByAge to S3 in the JSON format.
+countsByAge.write.format("json").save("s3a://...")
+```
+
+## 四. Machine Learning Example
+Spark机器学习库MLlib提供了很多分布式的机器学习算法. 这些算法覆盖了 特征抽取, 分类, 回归, 聚类, 推荐等等. MLlib同时也提供了机器学习pipeline工具用于构建工作流程, 模型训练和参数调优, 同时也支持模型加载和模型离线存储.
+
+### 1. Prediction with Logistic Regression
+在这例子里, 使用"标签"和"特征"数据集, 使用逻辑回归算法去预测标签值.
+```
+# Every record of this DataFrame contains the label and
+# features represented by a vector.
+df = sqlContext.createDataFrame(data, ["label", "features"])
+
+# Set parameters for the algorithm.
+# Here, we limit the number of iterations to 10.
+lr = LogisticRegression(maxIter=10)
+
+# Fit the model to the data.
+model = lr.fit(df)
+
+# Given a dataset, predict each point's label, and show the results.
+model.transform(df).show()
+```
