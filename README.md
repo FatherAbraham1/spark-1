@@ -15,24 +15,14 @@ Spark官方文档翻译
 1. examples
 2. quick_start
 
-<<<<<<< HEAD
-##### 3. api_docs 
+#### 2.1.3 api_docs 
 
-##### 4. deploying
-=======
-#### 2.1.3 Api_docs 
-
-#### 2.1.4 deploy
->>>>>>> f53ff2d057d49359c399e50d1678f83d5300c4ee
+#### 2.1.4 deploying
 1. env_deploy.md
 2. overview.md
 3. submitting_applications.md
 
-<<<<<<< HEAD
-##### 5. other_documents
-=======
-#### 2.1.5 more
->>>>>>> f53ff2d057d49359c399e50d1678f83d5300c4ee
+##### 2.1.5 other_documents
 
 ### 2.2 spark_util
 Spark Python基础库
