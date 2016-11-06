@@ -120,4 +120,3 @@ spark-submit --master yarn simple_app.py
 ```
 
 快速的完成了Spark的第一个应用程序,后面我们会对Spark的各个模块进入更深的研究
-
