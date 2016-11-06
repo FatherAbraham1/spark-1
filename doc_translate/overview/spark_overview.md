@@ -22,16 +22,13 @@ Spark 提供了几个简单的程序. Scala, Java, Python 和 R 程序例子在e
 例子2
 ```
 ./bin/spark-shell --master local[2]
-
 --master参数指定[分布式集群master url](http://spark.apache.org/docs/latest/submitting-applications.html#master-urls), 参数值local表示在本地运行, local[N]表示的是使用N个线程运行. 如果要测试Spark应用, 我们应该使用local master. 可以使用Spark shell命令的--help参数获取整个参数列表.
-
 ```
 
 例子3
 ```
 Python Spark应用，例如
 ./bin/spark-submit examples/src/main/python/pi.py 10
-
 ```
 
 例子4
