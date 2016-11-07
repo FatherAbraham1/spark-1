@@ -65,9 +65,63 @@ $ PYSPARK_DRIVER_PYTHON=jupyter ./bin/pyspark
 Spark整个核心的理念是弹性分布式数据集`resilient distributed dataset (RDD)`, 支持并行操作的数据集. 我们有2种方式产生RDD: 在driver程序里通过已有的集合序列化`parallelizing`而来, 或者从外部存储文件产生而来, 比如HDFS/HBase或者其他的Hadoop支持的文件系统.
 
 ### 5.1 Parallelized Collections
+我们可以在driver程序使用`SparkContext`对象的`parallelize`方法从已有的迭代器(iterable)或数据集(collections)并行化数据, 并行化数据支持分布式并行操作并行操作. 例如, 下面这个例子从数据集合[1~5]产生并行化数据
+```
+data = [1, 2, 3, 4, 5]
+distData = sc.parallelize(data)
 
+parallelize函数返回一个RDD对象
+```
 
+一旦调用parallelize函数会返回一个RDD对象, 可以被并行操作. 例如, 我们可以使用`distData.reduct(lambda a,b: a+b)`计算所有elements的和.
 
+`parallelize`函数有一个很重要的参数可以设置分割数据集为几个partition. Spark集群一个task处理一个partition. 典型的你可能希望集群的每一个CPU处理2-4个partition. 一般情况下, 不设置的话, Spark会尝试自动根据集群设置partition的个数. 用户也可以使用`parallelize(data, 10)`设置10个partition.
 
+注意: 有些代码API会使用`slices`代替`partitions`表示设置patition的个数
 
+### 5.2 External Datasets
+PySpark可以从任何Hadoop支持的文件系统文件产生分布式数据集, 包括本地文件系统, HDFS, Cassandra, HBase, Amazon S3等等. Spark支持text files, SequenceFiles 和任何Hadoop输入格式文件. 
+
+可以使用SparkContext对象的`textFile`函数从text file生成RDD对象. 函数需要一个文件URI参数(包括机器本地文件路径或者hdfs文件路径或者其他...), 函数会一行一行读取文件, 例如下面这个例子
+```
+>>> distFile = sc.textFile("data.txt")
+```
+distFile一旦产生可以支持各种数据操作. 例如, 我们可以好似用`map`和`reduct`操作计算总的字符数`distFile.map(lambda s: len(s)).reduce(lambda a,b:a+b)`
+
+Spark读取文件需要注意的几个点
+1. 如果读取的文件来自本地文件系统, 要求所有的worker节点都包含有相同的路径. 可以通过拷贝文件到所有的worker节点或者使用`network-mounted`共享文件.
+2. 所有Spark基于文件的输入函数, 包括`textFile`都支持配置到目录级别, 压缩文件和通配符. 例如, 用户可以设置`textFile("/my/directory")`或者`textFile("/my/directory/*.txt")`或者`textFile("/my/directory/*.gz")`
+3. `textFile`函数支持可选的第二个参数设置paritition的个数. 默认情况下, 每个`block`对应生成一个partition(HDFS默认情况一个block是64M), 但是用户也可以设置更大的partition个数, 不过需要注意的是partition的个数不能比block的个数还少.
+
+除了text file文件格式, Spark Python API也支持其他几种数据格式
+1. `SparkContext.wholeTextFiles` 支持读取一个包含多个text file的目录, 同时返回一序列<fileName, content> pairs, 假设有n个文件, 因此在使用collect函数的时候会返回n个元素的list对象. `textFile`则是顺序把所有的文件一行一行的读取, 假设所有文件总共有m行, 使用collect函数的会返回一个m个元素的list对象. 具体可以看下面这个代码
+```
+'''
+1. put data_0.dat to hdfs path /user/hadoop/programming_guide/spark_programming_guide/data_0.dat
+2. put data_1.dat to hdfs path /user/hadoop/programming_guide/spark_programming_guide/data_1.dat
+'''
+data_directory = '/user/hadoop/programming_guide/spark_programming_guide'
+# use textFile read directory
+text_file = sc.textFile(data_directory)
+collect_res = text_file.collect()
+print type(collect_res)
+print len(collect_res)
+'''
+type<list>
+543
+'''
+# use wholeTextFiles read directory
+text_file = sc.wholeTextFiles(data_directory)
+collect_res = text_file.collect()
+print type(collect_res)
+print len(collect_res)
+'''
+type<list>
+2
+'''
+```
+2. `RDD.saveAsPickleFile`和`SparkContext.pickleFile`支持保存RDD对象为串行的Python对象, SparkContext.pickleFile底层调用的是RDD.saveAsPickleFile, 序列化RDD为一个SequenceFile, 默认batch大小为10
+```
+```
+3. 读写`SequenceFile`文件
 

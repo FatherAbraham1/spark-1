@@ -60,6 +60,28 @@ def cat(hdfs_file):
         logger.error('cat file:[%s] exception:[%s]' % (hdfs_file, str(e)))
         return None
 
+def read(hdfs_file):
+    """
+    Read HDFS file
+
+    Parameters:
+        @hdfs_file -- HDFS file, such as /user/hadoop/examples/data_0.dat
+                      when hdfs_file is a directory, cause exception
+
+    Returns:
+        string content
+        exception return None
+    """
+    try:
+        if hdfs_file == '' or hdfs_file is None:
+            logger.error('parameter hdfs_file is empty')
+            return None
+        gen = hdfs_client.cat([hdfs_file])
+        return gen.next().next()
+    except Exception,e:
+        logger.error('cat file:[%s] exception:[%s]' % (hdfs_file, str(e)))
+        return None
+
 def copy_to_local(hdfs_file_list, local_path):
     """
     Copy HDFS files to local file system, HDFS Source is kept.
