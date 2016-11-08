@@ -9,7 +9,7 @@ from distutils.sysconfig import get_python_lib
 
 setup_status = setup(
     name = "spark_util",
-    version = "3.0",
+    version = "4.0",
     packages = find_packages(),
     package_data = {
         '': ['*.py']

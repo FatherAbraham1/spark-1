@@ -294,5 +294,34 @@ def exists(hdfs_path):
             return False
         return hdfs_client.test(hdfs_path)
     except Exception,e:
-        logger.error('check hdfs path:[%s] exists exception:[%s]' % (hdfs_path, str(e)))
+        exception_str = str(e)
+        if exception_str.find('No such file or directory') > 0:
+            return False
+        logger.error('check hdfs path:[%s] exists exception:[%s]' % (hdfs_path, exception_str))
+        return False
+
+def touch(hdfs_file):
+    """
+    Touch hdfs file when has exists straight return
+
+    Parameters:
+        @hdfs_file –- HDFS file
+
+    Returns:
+        return True/False
+    """
+    try:
+        if hdfs_file == '' or hdfs_file is None:
+            logger.error('parameter hdfs_file is empty')
+            return False
+        if exists(hdfs_file):
+            return True
+        gen = hdfs_client.touchz([hdfs_file])
+        res_dict = gen.next()
+        if res_dict['result'] == False:
+            logger.error('touch hdfs file:[%s] error:[%s]' % (hdfs_file, res_dict['error']))
+            return False
+        return True
+    except Exception,e:
+        logger.error('touch hdfs file:[%s] exception:[%s]' % (hdfs_file, str(e)))
         return False

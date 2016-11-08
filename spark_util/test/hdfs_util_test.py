@@ -180,5 +180,16 @@ class HdfsUtilTest(unittest.TestCase):
         hdfs_path = '/user/hadoop/examples/data_0.dat'
         self.assertTrue(hdfs_util.exists(hdfs_path))
 
+    @unittest.skip("skip touch function")
+    def test_touch(self):
+        hdfs_path = ''
+        self.assertFalse(hdfs_util.touch(hdfs_path))
+
+        hdfs_path = '/user/hadoop/programming_guide/spark_programming_guide/data_10000.dat'
+        self.assertTrue(hdfs_util.touch(hdfs_path))
+
+        hdfs_path = '/user/hadoop/programming_guide/spark_programming_guide/data_10001.dat'
+        self.assertTrue(hdfs_util.touch(hdfs_path))
+
 if __name__ == '__main__':
     unittest.main()

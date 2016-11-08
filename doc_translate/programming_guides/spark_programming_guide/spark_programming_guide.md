@@ -121,7 +121,5 @@ type<list>
 '''
 ```
 2. `RDD.saveAsPickleFile`和`SparkContext.pickleFile`支持保存RDD对象为串行的Python对象, SparkContext.pickleFile底层调用的是RDD.saveAsPickleFile, 序列化RDD为一个SequenceFile, 默认batch大小为10
-```
-```
 3. 读写`SequenceFile`文件
 

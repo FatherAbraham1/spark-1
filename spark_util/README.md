@@ -25,3 +25,4 @@ Python Spark util api. Contain Python HDFS api
    7. mv
    8. rmdir
    9. exists // check hdfs file or directory is exists
+   10. touch // touch hdfs file
