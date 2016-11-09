@@ -119,7 +119,40 @@ print len(collect_res)
 type<list>
 2
 '''
+
+代码: ./code/Spark_0_code.py
+提交: spark-submit  --master yarn --num-executors 1 --executor-cores 2 --executor-memory 500M Spark_0_code.py
+      默认用client方式执行这样才能在当前机器看到print信息
+      spark-submit  --master yarn --deploy-mode cluster --num-executors 1 --executor-cores 2 --executor-memory 500M Spark_0_code.py
+      这种方式执行的话driver print的信息不会打在当前机器的console
 ```
 2. `RDD.saveAsPickleFile`和`SparkContext.pickleFile`支持保存RDD对象为串行的Python对象, SparkContext.pickleFile底层调用的是RDD.saveAsPickleFile, 序列化RDD为一个SequenceFile, 默认batch大小为10
 3. 读写`SequenceFile`文件
+
+### 5.1.1 Saving and Loading SequenceFiles
+和`text files`一样, Spark也支持保存和读写一个`SequenceFiles`文件. 可以指定特殊的key和value, 但是对于一般的标准写来说并不需要设置key和value
+SequenceFile是Hadoop API 提供的一种二进制文件，它将数据以<key,value>的形式序列化到文件中。这种二进制文件内部使用Hadoop 的标准的Writable 接口实现序列化和反序列化。它与Hadoop API中的MapFile 是互相兼容的。Hive 中的SequenceFile 继承自Hadoop API 的SequenceFile，不过它的key为空，使用value 存放实际的值， 这样是为了避免MR 在运行map 阶段的排序过程。如果你用Java API 编写SequenceFile，并让Hive读取的话，请确保使用value字段存放数据，否则你需要自定义读取这种SequenceFile 的InputFormat class 和OutputFormat class。
+```
+"""
+1. put data_0.dat to hdfs path /user/hadoop/programming_guide/spark_programming_guide/data_0.dat
+"""
+data_file = '/user/hadoop/programming_guide/spark_programming_guide/data_0.dat'
+text_file = sc.textFile(data_file).map(lambda x: (x, len(x)))
+# saveAsSequenceFile
+sequence_file = '/user/hadoop/programming_guide/spark_programming_guide/sequence_file'
+text_file.saveAsSequenceFile(sequence_file)
+# read sequenceFile
+res_list = sc.sequenceFile(sequence_file).collect()
+print res_list
+
+a.saveAsSequenceFile生成的是目录
+b.可以用SparkContext对象的sequenceFile函数读取sequence file
+
+代码: ./code/Spark_1_code.py
+提交: spark-submit  --master yarn --num-executors 1 --executor-cores 2 --executor-memory 500M Spark_1_code.py
+```
+
+### 5.1.2 Saving and Loading Other Hadoop Input/Output Formats
+
+
 
