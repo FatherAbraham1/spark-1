@@ -18,9 +18,10 @@ Spark官方文档翻译
 #### 2.1.3 api_docs 
 
 #### 2.1.4 deploying
-1. env_deploy.md
-2. overview.md
-3. submitting_applications.md
+1. env_deploy_linux.md
+2. env_deploy_mac.md
+3. overview.md
+4. submitting_applications.md
 
 ##### 2.1.5 other_documents
 
