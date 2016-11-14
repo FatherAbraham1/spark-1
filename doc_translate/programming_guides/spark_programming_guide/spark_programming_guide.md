@@ -153,6 +153,28 @@ b.可以用SparkContext对象的sequenceFile函数读取sequence file
 ```
 
 ### 5.1.2 Saving and Loading Other Hadoop Input/Output Formats
+Spark兼容了`新`,`老`Hadoop MapReduce Api任何输入或输出格式.如果需要的话, Hadoop的配置可以使用Python的dict进行配置.
+```
+$ SPARK_CLASSPATH=/path/to/elasticsearch-hadoop.jar ./bin/pyspark
+conf = {"es.resource" : "index/type"}   # assume Elasticsearch is running on localhost defaults
+rdd = sc.newAPIHadoopRDD("org.elasticsearch.hadoop.mr.EsInputFormat",\
+    "org.apache.hadoop.io.NullWritable", "org.elasticsearch.hadoop.mr.LinkedMapWritable", conf=conf)
+rdd.first()         # the result is a MapWritable that is converted to a Python dict
+'''
+    (u'Elasticsearch ID',
+    {u'field1': True,
+     u'field2': u'Some Text',
+     u'field3': 12345})'
+'''
+```
 
+### 5.2 RDD Operations
+`RDD`支持2种类型操作
+1. `transformations`: 从一个已有的RDD转换生成一个新的RDD
+2. `actions`: 对RDD计算之后返回一个数值到driver程序
+例如,`map`是一个`transformation`操作,对RDD的每一个元素进行同一个函数操作,返回一个新的RDD. 另一方面, `reduce`是一个`action`操作, 对RDD的每一个元素进行同一个元素的操作,最终返回一个结果到driver程序.注意`reduceByKey`函数是一个transformation操作,会返回一个新的RDD
 
+Spark里的`transformations`都是延迟操作, 它们并不会马上执行. Spark会记录所有的transformations链, 当有action操作的时候再执行操作, 最终返回结果到driver程序.这个设计对于Spark来说是非常高效的, 例如使用map再用reduce返回数值的时候, 使用延迟操作可以使得map操作的数据集比较小, 如果一开始就计算map则数据集则非常大.
+
+默认情况下, 每个action操作都会重新计算RDD. 但是,很多情况我们会希望把一个RDD缓存到内存中, 使得RDD的元素能够被更快速的使用. 除此之外, 也支持把一个RDD持久化到磁盘同时支持在多个节点备份数据.
 

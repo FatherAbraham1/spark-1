@@ -1,3 +1,5 @@
+Linux系统(以Ubuntu12.04为例子)下安装YARN
+
 ## 一. 安装yarn伪分布式集群
 ### 1. 创建新用户
 ```
@@ -32,7 +34,8 @@ cat ./id_rsa.pub >> ./authorized_keys
 
 ### 4. 安装hadoop2
 ```
-(1) 从http://mirror.bit.edu.cn/apache/hadoop/common/下载最新的稳定版本的hadoop，例如hadoop-2.7.3/hadoop-2.7.3.tar.gz  
+(1) 从http://www.apache.org/dyn/closer.cgi/hadoop/common/hadoop-2.7.3/hadoop-2.7.3-src.tar.gz
+    下载最新的稳定版本的hadoop，例如hadoop-2.7.3/hadoop-2.7.3.tar.gz  
 (2) 安装hadoop:  
       sudo tar -zxf hadoop-2.7.3.tar.gz -C /usr/local  
       cd /usr/local  

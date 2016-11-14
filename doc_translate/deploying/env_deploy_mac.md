@@ -1,38 +1,40 @@
+Mac os系统下安装YARN
+
 ## 一. 安装yarn伪分布式集群
-### 1. 创建新用户
+### 1. 系统环境配置
 ```
-(1) 添加用户: sudo useradd -m hadoop -s /bin/bash  
-(2) 修改密码: sudo passwd hadoop  
-(3) 添加sudo权限: sudo adduser hadoop sudo  
-(4) 注销选择hadoop用户登录  
-```
-
-### 2. 系统环境配置
-```
-(1) sudo apt-get update  
-(2) 安装vim: sudo apt-get install vim  
-(3) 安装ssh: sudo apt-get install openssh-server
-(4) 设置ssh免登录  
-cd ~/.ssh  
-rm ./id_rsa*  
-ssh-keygen -t rsa  (一路回车即可)  
-cat ./id_rsa.pub >> ./authorized_keys 
+(1) 安装brew: /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
+(2) 更新homebrew源
+    1. cd /usr/local/Homebrew
+    2. git remote set-url origin http://mirrors.ustc.edu.cn/homebrew.git
+    3. cd ~
+    4. mkdir tmp
+    5. cd tmp
+    6. git clone http://mirrors.ustc.edu.cn/homebrew.git
+    7. sudo rm -rf /usr/local/.git
+    8. sudo rm -rf /usr/local/Library
+    9. sudo cp -R homebrew/.git /usr/local/
+    10. sudo cp -R homebrew/Library /usr/local/
+    11. brew update
 ```
 
-### 3. 安装java环境
+### 2. 安装java环境
 ```
-(1) 安装jre和jdk: sudo apt-get install openjdk-7-jre openjdk-7-jdk  
-(2) 设置环境变量JAVA_HOME: dpkg -L openjdk-7-jdk | grep '/bin/javac'  
-     该命令会输出一个路径，除去路径末尾的 “/bin/javac”  
-(3) vim ~/.bashrc  
-     添加一行export JAVA_HOME=...  
-(4) source ~/.bashrc  
-(5) check java 版本: java -version  
+(1) 下载jdk: http://download.oracle.com/otn-pub/java/jdk/7u79-b15/jdk-7u79-macosx-x64.dmg
+(2) 安装jdk:
+    1. hdiutil mount jdk-7u79-macosx-x64.dmg
+    2. sudo cp -R /Volumes/JDK\ 7\ Update\ 79 /Applications
+    3. 进入到应用程序 安装JDK
+(2) 设置环境变量JAVA_HOME: 
+    1. vim ~/.bashrc  
+    2. 添加一行export JAVA_HOME=/usr/libexec/java_home
+    3. source ~/.bashrc  
 ```
 
-### 4. 安装hadoop2
+### 3. 安装hadoop2
 ```
-(1) 从http://mirror.bit.edu.cn/apache/hadoop/common/下载最新的稳定版本的hadoop，例如hadoop-2.7.3/hadoop-2.7.3.tar.gz  
+(1) 从http://www.apache.org/dyn/closer.cgi/hadoop/common/hadoop-2.7.3/hadoop-2.7.3-src.tar.gz
+    下载最新的稳定版本的hadoop，例如hadoop-2.7.3/hadoop-2.7.3.tar.gz  
 (2) 安装hadoop:  
       sudo tar -zxf hadoop-2.7.3.tar.gz -C /usr/local  
       cd /usr/local  
