@@ -15,32 +15,32 @@ Linux系统(以Ubuntu12.04为例子)下安装YARN
 (2) 安装vim: sudo apt-get install vim  
 (3) 安装ssh: sudo apt-get install openssh-server
 (4) 设置ssh免登录  
-cd ~/.ssh  
-rm ./id_rsa*  
-ssh-keygen -t rsa  (一路回车即可)  
-cat ./id_rsa.pub >> ./authorized_keys 
+    cd ~/.ssh  
+    rm ./id_rsa*  
+    ssh-keygen -t rsa  (一路回车即可)  
+    cat ./id_rsa.pub >> ./authorized_keys 
 ```
 
 ### 3. 安装java环境
 ```
 (1) 安装jre和jdk: sudo apt-get install openjdk-7-jre openjdk-7-jdk  
 (2) 设置环境变量JAVA_HOME: dpkg -L openjdk-7-jdk | grep '/bin/javac'  
-     该命令会输出一个路径，除去路径末尾的 “/bin/javac”  
+    该命令会输出一个路径，除去路径末尾的 “/bin/javac”  
 (3) vim ~/.bashrc  
-     添加一行export JAVA_HOME=...  
+    添加一行export JAVA_HOME=...  
 (4) source ~/.bashrc  
 (5) check java 版本: java -version  
 ```
 
 ### 4. 安装hadoop2
 ```
-(1) 从http://www.apache.org/dyn/closer.cgi/hadoop/common/hadoop-2.7.3/hadoop-2.7.3-src.tar.gz
+(1) 从http://ftp.mirror.tw/pub/apache/hadoop/common/hadoop-2.7.3/hadoop-2.7.3.tar.gz
     下载最新的稳定版本的hadoop，例如hadoop-2.7.3/hadoop-2.7.3.tar.gz  
 (2) 安装hadoop:  
-      sudo tar -zxf hadoop-2.7.3.tar.gz -C /usr/local  
-      cd /usr/local  
-      sudo mv hadoop-2.7.3 hadoop  
-      sudo chown -R hadoop hadoop
+    sudo tar -zxf hadoop-2.7.3.tar.gz -C /usr/local  
+    cd /usr/local  
+    sudo mv hadoop-2.7.3 hadoop  
+    sudo chown -R hadoop hadoop
 ```
 
 ### 5. 配置hadoop
@@ -121,28 +121,28 @@ cd /usr/local/hadoop/etc/hadoop进入hadoop配置目录，如果没有hadoop-env
 ### 7. 启动YARN
 ```
 (1) 启动yarn  
-     ./sbin/start-yarn.sh   
-     ./sbin/mr-jobhistory-daemon.sh start historyserver  #开启历史服务器，才能在Web中查看任务运行情况  
+    ./sbin/start-yarn.sh   
+    ./sbin/mr-jobhistory-daemon.sh start historyserver  #开启历史服务器，才能在Web中查看任务运行情况  
 (2) jps查看  
-     开启后通过 jps 查看，可以看到多了 NodeManager 和 ResourceManager 两个后台进程  
+    开启后通过 jps 查看，可以看到多了 NodeManager 和 ResourceManager 两个后台进程  
 (3) 启动成功后可以通过页面http://localhost:8088/cluster查看集群任务的运行情况  
 (4) 关闭yarn  
-      ./sbin/stop-yarn.sh   
-      ./sbin/mr-jobhistory-daemon.sh stop historyserver  
+    ./sbin/stop-yarn.sh   
+    ./sbin/mr-jobhistory-daemon.sh stop historyserver  
 ```
 
 ## 二. 安装Spark
 ```
 1. 下载Spark  
-    wget "http://d3kbcqa49mib13.cloudfront.net/spark-2.0.0-bin-hadoop2.7.tgz"  
+   wget "http://d3kbcqa49mib13.cloudfront.net/spark-2.0.0-bin-hadoop2.7.tgz"  
 2. 解压到/usr/local  
-    sudo tar -xvzf spark-2.0.0-bin-hadoop2.7.tgz -C /usr/local  
-    cd /usr/local  
-    sudo mv spark-2.0.0-bin-hadoop2.7 spark  
+   sudo tar -xvzf spark-2.0.0-bin-hadoop2.7.tgz -C /usr/local  
+   cd /usr/local  
+   sudo mv spark-2.0.0-bin-hadoop2.7 spark  
 3. 设置环境变化PATH  
-    vim ~/.bashrc  
-    export PATH=$PATH:/usr/local/hadoop/bin:/usr/local/spark/bin  
-    source ~/.bashrc  
+   vim ~/.bashrc  
+   export PATH=$PATH:/usr/local/hadoop/bin:/usr/local/spark/bin  
+   source ~/.bashrc  
 ```
 ```
 4). 配置Spark   
@@ -193,16 +193,16 @@ cd /usr/local/hadoop
 ./sbin/start-dfs.sh  
 ./sbin/start-yarn.sh  
 ./sbin/mr-jobhistory-daemon.sh start historyserver  
-```
-jps查看进程，应该有以下几个(ignore pid)
-```
-16891 NodeManager  
-16951 JobHistoryServer  
-16502 SecondaryNameNode  
-16028 NameNode  
-17729 Jps  
-16683 ResourceManager  
-16228 DataNode  
+jps
+
+//jps查看进程，应该有以下几个(ignore pid)
+NodeManager  
+JobHistoryServer  
+SecondaryNameNode  
+NameNode  
+Jps  
+ResourceManager  
+DataNode  
 ```
 
 ### 3. 停止yarn

@@ -16,6 +16,11 @@ Mac os系统下安装YARN
     9. sudo cp -R homebrew/.git /usr/local/
     10. sudo cp -R homebrew/Library /usr/local/
     11. brew update
+(3) 设置免登陆
+    cd ~/.ssh  
+    rm ./id_rsa*  
+    ssh-keygen -t rsa  (一路回车即可)  
+    cat ./id_rsa.pub >> ./authorized_keys 
 ```
 
 ### 2. 安装java环境
@@ -26,30 +31,32 @@ Mac os系统下安装YARN
     2. sudo cp -R /Volumes/JDK\ 7\ Update\ 79 /Applications
     3. 进入到应用程序 安装JDK
 (2) 设置环境变量JAVA_HOME: 
-    1. vim ~/.bashrc  
-    2. 添加一行export JAVA_HOME=/usr/libexec/java_home
-    3. source ~/.bashrc  
+    1. vim ~/.bash_profile 
+    2. 添加一行
+       export JAVA_HOME=`/usr/libexec/java_home`
+    3. source ~/.bash_profile  
 ```
 
 ### 3. 安装hadoop2
 ```
-(1) 从http://www.apache.org/dyn/closer.cgi/hadoop/common/hadoop-2.7.3/hadoop-2.7.3-src.tar.gz
+(1) 从http://ftp.mirror.tw/pub/apache/hadoop/common/hadoop-2.7.3/hadoop-2.7.3.tar.gz
     下载最新的稳定版本的hadoop，例如hadoop-2.7.3/hadoop-2.7.3.tar.gz  
 (2) 安装hadoop:  
-      sudo tar -zxf hadoop-2.7.3.tar.gz -C /usr/local  
-      cd /usr/local  
-      sudo mv hadoop-2.7.3 hadoop  
-      sudo chown -R hadoop hadoop
+    1. tar -zxf hadoop-2.7.3.tar.gz -C /usr/local  
+    2. cd /usr/local  
+    3. mv hadoop-2.7.3 hadoop  
 ```
 
-### 5. 配置hadoop
+### 4. 配置hadoop
 ```
-cd /usr/local/hadoop/etc/hadoop进入hadoop配置目录，如果没有hadoop-env.sh或yarn-env.sh需要从后缀名为hadoop-env.sh.template复制一份 
-1). 在hadoop-env.sh中配置JAVA_HOME  
-2).在yarn-env.sh中配置JAVA_HOME  
+1). cd /usr/local/hadoop/etc/hadoop
+    进入hadoop配置目录，如果没有hadoop-env.sh或yarn-env.sh需要从后缀名为hadoop-env.sh.template复制一份 
+2). hadoop-env.sh中配置JAVA_HOME  
+3). yarn-env.sh中配置JAVA_HOME  
+    参考 ~/.bash_profile
 ```
 ```
-3). 修改core-site.xml  
+4). 修改core-site.xml  
 <configuration>  
         <property>  
              <name>hadoop.tmp.dir</name>  
@@ -102,7 +109,7 @@ cd /usr/local/hadoop/etc/hadoop进入hadoop配置目录，如果没有hadoop-env
 ```
 (1) namenode格式化  
     ./bin/hdfs namenode -format  
-(2) 修改~/.bashrc添加以下两行，并执行source ~/.bashrc  
+(2) 修改~/.bash_profile添加以下两行，并执行source ~/.bash_profile  
     export HADOOP_HOME=/usr/local/hadoop   
     export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native  
 (3) ./libexec/hadoop-config.sh 找到JAVA_HOME，在前面添加  
@@ -120,28 +127,29 @@ cd /usr/local/hadoop/etc/hadoop进入hadoop配置目录，如果没有hadoop-env
 ### 7. 启动YARN
 ```
 (1) 启动yarn  
-     ./sbin/start-yarn.sh   
-     ./sbin/mr-jobhistory-daemon.sh start historyserver  #开启历史服务器，才能在Web中查看任务运行情况  
+    ./sbin/start-yarn.sh   
+    ./sbin/mr-jobhistory-daemon.sh start historyserver  #开启历史服务器，才能在Web中查看任务运行情况  
 (2) jps查看  
-     开启后通过 jps 查看，可以看到多了 NodeManager 和 ResourceManager 两个后台进程  
+    开启后通过 jps 查看，可以看到多了 NodeManager 和 ResourceManager 两个后台进程  
 (3) 启动成功后可以通过页面http://localhost:8088/cluster查看集群任务的运行情况  
 (4) 关闭yarn  
-      ./sbin/stop-yarn.sh   
-      ./sbin/mr-jobhistory-daemon.sh stop historyserver  
+    ./sbin/stop-yarn.sh   
+    ./sbin/mr-jobhistory-daemon.sh stop historyserver  
 ```
 
 ## 二. 安装Spark
 ```
 1. 下载Spark  
-    wget "http://d3kbcqa49mib13.cloudfront.net/spark-2.0.0-bin-hadoop2.7.tgz"  
+   wget "http://d3kbcqa49mib13.cloudfront.net/spark-2.0.0-bin-hadoop2.7.tgz"  
 2. 解压到/usr/local  
-    sudo tar -xvzf spark-2.0.0-bin-hadoop2.7.tgz -C /usr/local  
-    cd /usr/local  
-    sudo mv spark-2.0.0-bin-hadoop2.7 spark  
+   tar -xvzf spark-2.0.0-bin-hadoop2.7.tgz -C /usr/local  
+   cd /usr/local  
+   mv spark-2.0.0-bin-hadoop2.7 spark  
 3. 设置环境变化PATH  
-    vim ~/.bashrc  
-    export PATH=$PATH:/usr/local/hadoop/bin:/usr/local/spark/bin  
-    source ~/.bashrc  
+   vim ~/.bash_profile  
+   设置环境变量PATH添加hadoop和spark的bin路径
+   export PATH=$PATH:/usr/local/hadoop/bin:/usr/local/spark/bin  
+   source ~/.bash_profile  
 ```
 ```
 4). 配置Spark   
@@ -149,12 +157,12 @@ cd /usr/local/spark/conf
 cp spark-env.sh.template spark-env.sh   
 vim spark-env.sh  
 配置内容如下  
-export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-i386  
+export JAVA_HOME=`/usr/libexec/java_home`
 export HADOOP_HOME=/usr/local/hadoop     
 export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop  
 SPARK_MASTER_IP=master  
 SPARK_LOCAL_DIRS=/usr/local/spark  
-SPARK_DRIVER_MEMORY=1G  
+SPARK_DRIVER_MEMORY=2G  
 ```
 ```
 5). 启动spark  
@@ -170,19 +178,13 @@ http://master:8080
 有2种方式运行Spark，一种是使用Yarn另外一种就是Spark的本地模式。为了方面，以后我们都采用Yarn来运行Spark任务，不会再单独启动Spark
 
 ```
-sudo chown hadoop:root -R /usr/local/hadoop  
-sudo chown hadoop:root -R /usr/local/spark  
-sudo chmod 775 -R /usr/local/hadoop  
-sudo chmod 775 -R /usr/local/spark  
-```
-```
-//bashrc配置  
-export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-i386  
+//bash_profile配置  
+export JAVA_HOME=`/usr/libexec/java_home`
 export HADOOP_HOME=/usr/local/hadoop     
 export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native  
 export HADOOP_OPTS=-Djava.library.path=$HADOOP_HOME/lib  
 export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop  
-export PATH=$PATH:/usr/local/hadoop/bin:/usr/local/spark/bin  
+export PATH=$PATH:/usr/local/bin:/usr/local/scons/bin:/usr/local/hadoop/bin:/usr/local/spark/bin  
 export LD_LIBRARY_PATH=/usr/local/hadoop/lib/native:$LD_LIBRARY_PATH  
 ```
 
@@ -192,16 +194,16 @@ cd /usr/local/hadoop
 ./sbin/start-dfs.sh  
 ./sbin/start-yarn.sh  
 ./sbin/mr-jobhistory-daemon.sh start historyserver  
-```
-jps查看进程，应该有以下几个(ignore pid)
-```
-16891 NodeManager  
-16951 JobHistoryServer  
-16502 SecondaryNameNode  
-16028 NameNode  
-17729 Jps  
-16683 ResourceManager  
-16228 DataNode  
+jps
+
+//jps查看进程应该有以下几个
+NodeManager  
+JobHistoryServer  
+SecondaryNameNode  
+NameNode  
+Jps  
+ResourceManager  
+DataNode  
 ```
 
 ### 3. 停止yarn
@@ -210,6 +212,7 @@ cd /usr/local/hadoop
 ./sbin/stop-dfs.sh  
 ./sbin/stop-yarn.sh  
 ./sbin/mr-jobhistory-daemon.sh stop historyserver  
+jps
 ```
 
 ### 4. web界面查看
@@ -220,11 +223,16 @@ cd /usr/local/hadoop
 
 ### 5. 问题汇总
 #### 1
-Hadoop 2.x.x - warning: You have loaded library /home/hadoop/2.2.0/lib/native/libhadoop.so.1.0.0 which might have disabled stack guard.  
+1. Hadoop 2.x.x - warning: You have loaded library /home/hadoop/2.2.0/lib/native/libhadoop.so.1.0.0 which might have disabled stack guard.  
 ```
 解决方案  
-1. vi ~/.bashrc  
+1. vi ~/.bash_profile  
 2. 添加以下2行  
    export HADOOP_COMMON_LIB_NATIVE_DIR=${HADOOP_HOME}/lib/native  
    export HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/lib  
 ```
+2. localhost: ssh: connect to host localhost port 22: Connection refused
+```
+打开系统偏好设置 —— 共享，选中远程登录
+```
+
